@@ -1,0 +1,71 @@
+#include <math.h>
+#include <stdio.h>
+#include <regex.h>
+#include <stdlib.h>
+#define RAND_ZXSPEC(seed) ((75*(seed+1) % 65537) - 1)
+#define MAX 20
+#define R_MAX 65537
+#define INT_REGEX "^[0-9]*\n?$"
+#define TO_GENERATE 10000000
+
+int num_input (char finn) {
+    regex_t check;
+    int spr;
+    char xyz[MAX];
+    char *pnum;
+    printf("Proszę podaj seed %c'a: ", finn);
+    fgets(xyz, MAX, stdin);
+
+    spr = regcomp(&check, INT_REGEX, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    int out = strtod(xyz, &pnum);
+    if(!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+
+}
+int zxspec () {
+    int i, count, inn_x, inn_y;
+    double x,y;
+    inn_x = num_input('x');
+    inn_y = num_input('y');
+    for(i = 0; i < TO_GENERATE; i++) {
+        inn_x= RAND_ZXSPEC(inn_x);
+        inn_y= RAND_ZXSPEC(inn_y);
+        x = (double)inn_x / (R_MAX - 1.0);
+        y = (double)inn_y / (R_MAX - 1.0);
+
+        if (((x*x) + (y*y)) < 1) {
+            count++;
+        }
+    }
+    double pi_estimate_zxspec = (count * 4)/(TO_GENERATE * 1.0);
+    printf("Szacowanie PI z użyciem generatora ZX SPECTRUM to: %lf\n", pi_estimate_zxspec);
+}
+int crand () {
+    int i, count, inn_x, inn_y;
+    double x,y;
+    inn_x = num_input('x');
+    inn_y = num_input('y');
+    for(i=0;i<TO_GENERATE;i++) {
+        inn_x = rand();
+        inn_y = rand();
+        x = (double)inn_x / RAND_MAX;
+        y = (double)inn_y / RAND_MAX;
+
+        if (((x*x) + (y*y)) < 1) {
+            count++;
+        }
+    }
+    double pi_estimate_crand = (count * 2)/(TO_GENERATE * 1.0);
+    printf("Szacowanie PI z użyciem funkcji rand() to: %lf\n", pi_estimate_crand);
+}
+int main () {
+    zxspec();
+    crand();
+}
