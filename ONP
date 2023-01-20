@@ -73,6 +73,7 @@ int main () {
     printf("Podaj działanie w notacji ONP, oddzielając każdą liczbę/operand klawiszem enter\n");
     printf("Jeśli chcesz otrzymać wynik, podaj znak '='\n");
     printf("Jeśli chcesz zakończyć w którymś momencie działanie programu wpisz znak 'w'\n");
+    printf("Przykład: 4 ENTER 5 ENTER + ENTER 6 ENTER 7 ENTER + ENTER - ENTER = ENTER --> wyświetli wynik równy -4");
     
     while (1) {
         scanf("%s", temp);
