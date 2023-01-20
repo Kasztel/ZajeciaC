@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 30 //max liczba liczb w tablicy
+
+//program może mieć ewentualne problemy z sortowaniem "ciekawych" małych liczb typu "0.00003"
+
+void swap (double* xP, double* yP) {
+    int temp = *xP;
+    *xP = *yP;
+    *yP = temp;
+}
+
+int main () {
+    double tabLiczb[MAX];
+    char check[MAX];
+    int i=0;
+    int j,k,l,n,m;
+    printf("Wprowadź liczby rozdzielając je przyciskiem ENTER, gdy skończysz,\nwciśnij kombinację CTRL-D(UNIX) LUB CTRL-Z(WINDOWS)\n");
+    while(scanf("%lf", &tabLiczb[i]) != EOF) {
+        i++;
+    }
+
+    //sortowanie
+    for(j=0; j<i-1;j++) {
+        for(k=0; k<i-1; k++) {
+            if(tabLiczb[k] > tabLiczb[k + 1]) {
+                swap(&tabLiczb[k], &tabLiczb[k+1]);
+            }
+        }
+    }
+    
+    //wyświetlanie posortowanej tablicy
+    printf("Liczby posortowane rosnąco to: \n");
+    for(l=0;l < i; l++) {
+        printf("%lf\n", tabLiczb[l]);
+    }
+    printf("Liczby posortowane malejąco to: \n");
+    for(n=i-1; n>=0; n--) {
+        printf("%lf\n", tabLiczb[n]);
+    }
+}
