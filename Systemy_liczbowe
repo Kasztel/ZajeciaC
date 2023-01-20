@@ -3,7 +3,7 @@
 #include <regex.h>
 #define MAX 1024
 #define INT_REGEX "^[0-9]*\n?$"
-//program działa do systemu 16, powinien działać do conajmniej 30 (jak sprawdzałem to dla paru liczb działał) 
+//program działa do systemu 16, powinien działać do conajmniej 30 (jak sprawdzałem to dla paru liczb działał)
 int good_input() {
     regex_t check;
     int spr;
@@ -16,6 +16,12 @@ int good_input() {
     spr = regexec(&check, xyz, 0, NULL, 0);
 
     int out = strtod(xyz, &pnum);
+
+    if (out < 2) {
+        printf("Nie ma systemu liczbowego, który ma podstawą niższą niż 2!");
+        exit(1);
+    }
+
     if (!spr) {
         return out;
     }
@@ -27,7 +33,7 @@ int good_input() {
 
 int main() {
     int sys,n,pom,j;
-    int i = 0;
+    int i = 1;
     char finalNumber[MAX];
     printf("Proszę podaj system liczbowy: \n");
     sys = good_input();
@@ -45,7 +51,7 @@ int main() {
 
     }
     printf("Podana liczba zapisana w systemie %d to: \n", sys);
-    for(j=i;j>=0;j--) {
+    for(j=i;j>=1;j--) {
         printf("%c", finalNumber[j]);
     }
 
