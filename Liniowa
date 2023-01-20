@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <regex.h>
+#include <stdlib.h>
+#define LINEAR_ROOT (-d/c)
+#define MAX_INPUT 30
+#define REGEX_FLOAT "^[-+]?[0-9]+?\\.?([0-9]+)?\n?$"
+
+
+
+int main () {
+    regex_t check;
+    int spr1,spr2;
+    char b[MAX_INPUT];
+    char a[MAX_INPUT];
+
+    printf("Proszę, podaj współczynnik a: ");
+    fgets(a, MAX_INPUT, stdin);
+    
+
+    printf("Proszę, podaj współczynnik b: ");
+    fgets(b, MAX_INPUT, stdin);
+
+    
+    spr1 = regcomp(&check, REGEX_FLOAT, REG_EXTENDED);
+    spr1 = regexec(&check, a, 0, NULL, 0);
+    spr2 = regcomp(&check, REGEX_FLOAT, REG_EXTENDED);
+    spr2 = regexec(&check, b, 0, NULL, 0);
+    if(!spr1 && !spr2) {
+        float c,d,e;
+        sscanf(a, "%f", &c);
+        sscanf(b, "%f", &d);
+        if (c==0 && d!=0) {
+            printf("Brak rozwiązania!");
+            exit(0);
+        }
+        if (c==0 && d==0) {
+            printf("Nieskończenie wiele rozwiązań!");
+            exit(0);
+        }
+        e = LINEAR_ROOT;
+        printf("Rozwiązanie to %f", e);
+        
+    }
+    else {
+        printf("Podano złe dane!");
+    }
+}
