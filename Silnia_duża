@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <regex.h>
+#define MAX 250
+#define INT_REGEX "^[0-9]*\n?$"
+
+
+
+int num_input () {
+    regex_t check;
+    int spr;
+    char xyz[MAX];
+    char *pnum;
+    printf("Proszę podaj liczbe naturalną: \n");
+    fgets(xyz, MAX, stdin);
+
+    spr = regcomp(&check, INT_REGEX, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    int out = strtod(xyz, &pnum);
+    if(!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+
+}
+
+int multiply(int a, int rev_order[], int rev_size) {
+	int carry = 0;
+
+	for (int i=0; i<rev_size; i++)
+	{
+		int prod = rev_order[i] * a + carry;
+
+		rev_order[i] = prod % 10;
+
+		carry = prod/10;
+	}
+
+	while (carry)
+	{
+		rev_order[rev_size] = carry%10;
+		carry = carry/10;
+		rev_size++;
+	}
+	return rev_size;
+}
+
+int factorial(int n) {
+	int rev_order[MAX];
+
+	rev_order[0] = 1;
+	int rev_size = 1;
+
+	for (int a=2; a<=n; a++)
+		rev_size = multiply(a, rev_order, rev_size);
+
+	printf("Silnia z danej liczby to: ");
+	for (int i=rev_size-1; i>=0; i--)
+		printf("%d", rev_order[i]);
+}
+
+int main() {
+	int n;
+	n = num_input();
+	factorial(n);
+	printf("\n");
+	return 0;
+}
