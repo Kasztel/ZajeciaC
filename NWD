@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <regex.h>
+#include <stdlib.h>
+#define MAX 20
+#define INT_REGEX "^-?[0-9]*\n?$"
+
+int num_input (char user_input) {
+    regex_t check;
+    int spr;
+    char xyz[MAX];
+    char *pnum;
+    printf("Proszę podaj liczbe %c: \n", user_input);
+    fgets(xyz, MAX, stdin);
+
+    spr = regcomp(&check, INT_REGEX, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    int out = strtod(xyz, &pnum);
+    if(!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+
+}
+int main () {
+    int a,b,pom;
+    a = num_input('a');
+    b = num_input('b');
+    pom = 0;
+
+    while(b != 0) {
+        pom = b;
+        b = a%b;
+        a = pom;
+    }
+    if (a < 0) {
+        a = -a;
+    }
+    printf("NWD to %d", a);
+}
