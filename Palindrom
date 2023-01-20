@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <regex.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX 30
+#define WORD_REGEX "^[A-z]*\n?$"
+
+int if_good (char word[MAX]) {
+    regex_t check;
+    int spr;
+
+    spr = regcomp(&check, WORD_REGEX, REG_EXTENDED);
+    spr = regexec(&check, word, 0, NULL, 0);
+
+    if(!spr) {
+        return 0;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+
+}
+
+int main () {
+    char word[MAX];
+    int decider = 0;
+    printf("Podaj słowo (bez polskich znaków)\n");
+    scanf("%s", word);
+    if_good(word);
+    int len = strlen(word);
+
+    for (int i = 0; i < len; i++) {
+        if(word[i] != word[len-i-1]) {
+            decider = 1;
+            break;
+        }
+
+    }
+    
+    if (decider) {
+        printf("To nie palindrom!\n");
+    }
+    else {
+        printf("To palindrom!\n");
+    }
+}
