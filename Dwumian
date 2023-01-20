@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <regex.h>
+#define MAX 500
+#define INT_REGEX "^[0-9]*\n?$"
+//Zakładam, że chodziło o współczynnik dwumianowy - w razie złego zrozumienia napisze inny program
+
+int num_input (char nork) {
+    regex_t check;
+    int spr;
+    char xyz[MAX];
+    char *pnum;
+    printf("Proszę podaj współczynnik %c dwumianu Newtona(z przedziału 0-20): \n", nork);
+    fgets(xyz, MAX, stdin);
+
+    spr = regcomp(&check, INT_REGEX, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    int out = strtod(xyz, &pnum);
+    if(!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+
+}
+
+long long int factorial(int n) {
+    if (n>1) {
+        return n*factorial(n-1);
+    }
+    else {
+        return 1;
+    }
+}
+
+int main () {
+    long double n,k,j,nexclam,kexclam,jexclam;
+    long double newton;
+    n = num_input('n');
+    k = num_input('k');
+    if (n<k) {
+        printf("Wartość n musi być większa od wartości k!\n");
+        exit(0);
+    }
+    j = n - k;
+    nexclam = factorial(n);
+    kexclam = factorial(k);
+    jexclam = factorial(j);
+    newton = nexclam/(kexclam*jexclam);
+    printf("%Lf", newton);
+
+}
