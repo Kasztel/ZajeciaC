@@ -2,10 +2,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <regex.h>
+#include <math.h>
 #define MAX 100
 #define FLOAT_REGEX "^-?[0-9]+?\\.?([0-9]+)?\n?$"
-#define OPERAND_REGEX "^(\\+?\\-?\\*?\\/?\\=?w?)?\n?$"
+#define OPERAND_REGEX "^(\\+?\\-?\\*?\\/?\\=?\\^?l?s?c?p?w?)?\n?$"
 
+//prosze o kompilacje z flagą -lm
+// znak p oznacza pierwiastek 2 stopnia, l logarytm naturalny, s i c sinus i cosinus
 int top = 0;
 double tab[MAX];
 
@@ -68,6 +71,7 @@ int main () {
     double x,y;
     int i = 0;
     printf("Podaj działanie w notacji ONP, oddzielając każdą liczbę/operand klawiszem enter\n");
+    printf("Jeśli chcesz otrzymać wynik, podaj znak '='\n");
     printf("Jeśli chcesz zakończyć w którymś momencie działanie programu wpisz znak 'w'\n");
     
     while (1) {
@@ -77,8 +81,8 @@ int main () {
             char actual_operator = *temp;
             switch (actual_operator) {
                 case '+':
-                    x = pop();
                     y = pop();
+                    x = pop();
                     push(x+y);
                     continue;
                 case '-':
@@ -87,8 +91,8 @@ int main () {
                     push(x-y);
                     continue;
                 case '*':
-                    x = pop();
                     y = pop();
+                    x = pop();
                     push(x*y);
                     continue;
                 case '/':
@@ -99,6 +103,27 @@ int main () {
                         exit(0);
                     }
                     push(x/y);
+                    continue;
+                case '^':
+                    y = pop();
+                    x = pop();
+                    push(pow(x,y));
+                    continue;
+                case 'p':
+                    x = pop();
+                    push(sqrt(x));
+                    continue;
+                case 'l':
+                    x = pop();
+                    push(log(x));
+                    continue;
+                case 's':
+                    x = pop();
+                    push(sin(x));
+                    continue;
+                case 'c':
+                    x = pop();
+                    push(cos(x));
                     continue;
                 case '=':
                     answer = pop();
