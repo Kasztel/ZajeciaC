@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <regex.h>
+#include <math.h>
+#include <stdlib.h>
+#define DELTA (b*b)-(4*a*c)
+#define SQUARE_ROOT1 (-b-sqrt(DELTA))/2*a
+#define SQUARE_ROOT2 (-b+sqrt(DELTA))/2*a
+#define MAX_INPUT 30
+#define REGEX_FLOAT "^[-+]?[0-9]+?\\.?([0-9]+)?\n?$"
+
+//proszę o kompilację z flagą -lm
+
+double innput(char finput) {
+    regex_t check;
+    int spr;
+    char xyz[MAX_INPUT];
+    char *pnum;
+
+    printf("Proszę podaj współczynnik %c: ", finput);
+    fgets(xyz, MAX_INPUT, stdin);
+
+    spr = regcomp(&check, REGEX_FLOAT, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    double out = strtod(xyz, &pnum);
+    if (!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane!\nSpróbuj ponownie!\n");
+        exit(1);
+    }
+}
+
+
+
+int main () {
+    double a = innput('a');
+    if (a==0) {
+        printf("Kiedy a jest 0, wtedy nie jest to równanie kwadratowe\nSpróbuj ponownie podać argument inny niż 0\n");
+        exit(1);    
+    }
+    double b = innput('b');
+    double c = innput('c');
+
+    if ((b==0) && (c==0)) {
+        printf("Takie równanie ma zawsze miejsce zerowe równe 0\n");
+        exit(0);
+    }
+
+    double delta = DELTA;
+
+    if (delta < 0) {
+        printf("Równanie nie ma rozwiązań rzeczywistych\n");
+    }
+    else if (delta == 0) {
+        double roz = -b/(2*a);
+        printf("Równanie ma jedno rozwiązanie i jest to %lf\n", roz);
+    }
+    else {
+        double roz1 = (-b-sqrt(delta))/(2*a);
+        double roz2 = (-b+sqrt(delta))/(2*a);
+        printf("To równanie ma 2 rozwiązania i są to %lf oraz %lf\n", roz1, roz2);
+    }
+
+}
