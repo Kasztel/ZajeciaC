@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#define PWD_MAX 32 // maksymalna długość hasła
+
+int main(int narg, char *args[]) {
+	if (narg < 2) {
+		printf("Nieprawidłowa ilość argumentów. Proszę wpisać ścieżkę pliku.\n");
+		return 1;
+	}
+	char pwd[PWD_MAX + 1];
+	char tempn[L_tmpnam];
+	FILE *file1, *file2;
+
+	// wczytywanie hasła
+	printf("Wpisz hasło (max %d): ", PWD_MAX);
+	fgets(pwd, PWD_MAX + 1, stdin);
+
+	// część szyfrująca
+	int j;
+	char c;
+	tmpnam(tempn); //niestety, kompilator wyrzuca ostrzeżenie, jednak użyłem tej funkcji zgodnie z opisem zadania
+	if (NULL==(file1=fopen(args[1], "rb"))) return 1;
+	if (NULL==(file2=fopen(tempn, "wb"))) return 1;
+	for (c = getc(file1), j = 0; c != EOF; c = getc(file1), j++) {
+		c ^= pwd[j % (strlen(pwd) / sizeof(char))];
+		putc(c, file2);
+	}
+	unlink(args[1]);
+	rename(tempn, args[1]);
+
+	return 0;
+}
