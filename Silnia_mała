@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_INPUT 30
+
+int main () {
+    char user_input[MAX_INPUT];
+    int silnia = 1;
+    char *ptr;
+    int silowana;
+    printf("Podaj liczbę, z której chcesz otrzymać silnie: \n");
+    fgets(user_input, MAX_INPUT, stdin);
+    silowana = strtod(user_input, &ptr);
+
+    for(int i = 1; i <= silowana; i++) {
+        if (silowana == 0) {
+            printf("Wynik to 1");
+            break;
+        }
+        silnia = silnia * i;
+    }
+    printf("Wynik to %d", silnia);
+}
