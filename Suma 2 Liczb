@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <regex.h>
+#define MAX_INPUT 30
+#define REGEX_FLOAT "^[-+]?[0-9]+?\\.?([0-9]+)?\n?$"
+
+int main () {
+    regex_t check;
+    int spr1,spr2;
+    char b[MAX_INPUT];
+    char a[MAX_INPUT];
+
+    printf("Proszę, podaj liczbe a: ");
+    fgets(a, MAX_INPUT, stdin);
+
+    printf("Proszę, podaj liczbe b: ");
+    fgets(b, MAX_INPUT, stdin);
+
+    spr1 = regcomp(&check, REGEX_FLOAT, REG_EXTENDED);
+    spr1 = regexec(&check, a, 0, NULL, 0);
+    spr2 = regcomp(&check, REGEX_FLOAT, REG_EXTENDED);
+    spr2 = regexec(&check, b, 0, NULL, 0);
+    if(!spr1 && !spr2) {
+        float c,d,e;
+        sscanf(a, "%f", &c);
+        sscanf(b, "%f", &d);
+        e = c + d;
+        printf("Rozwiązanie to %f", e);
+        
+    }
+    else {
+        printf("Podano złe dane!");
+    }
+}
