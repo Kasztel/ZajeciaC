@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define L_MAX 20
+#define C_MAX 20
+
+int cmpstring(void const *a, void const *b) { 
+    char const **a1 = (char const **)a;
+    char const **b1 = (char const **)b;
+
+    return strcmp(*a1, *b1);
+}
+
+int main()
+{
+    printf("Poszczególne słowa oddzielaj klawiszem enter, a gdy chcesz rozpocząć sortowanie, kliknij CTRL-D\n");
+    char *tekst[L_MAX];
+    int p;
+    for(p = 0; p<L_MAX; p++){
+        tekst[p] = (char*)malloc(C_MAX * sizeof(char));
+    }
+
+    int len = 0;
+    while(scanf("%s", tekst[len]) != EOF){
+        len++;
+    }
+
+    qsort(tekst, len, sizeof(char*), cmpstring);
+
+    printf("Posortowane: \n");
+    int i,j;
+    for (i = 0; i < len; i++)
+    {
+        printf("%s \n", tekst[i]);
+    }
+}
