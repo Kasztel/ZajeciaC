@@ -1,0 +1,151 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <regex.h>
+#define OPERAND_REGEX "^(\\+?\\-?\\*?\\/?\\^?l?s?c?p?)?\n?$"
+#define FLOAT_REGEX "^[-+]?[0-9]+?\\.?([0-9]+)?\n?$"
+#define OPERATORS_MSG "Jaką chcesz wykonać operacje?\n1.Suma (Wpisz +)\n2.Różnica (Wpisz -)\n3.Mnożenie (Wpisz *)\n4.Dzielenie (Wpisz /)\n5.Potęgowanie (Wpisz ^)\n6.Pierwiastek stopnia drugiego (Wpisz p)\n7.Logarytm naturalny (Wpisz l)\n8.Sinus (Wpisz s)\n9.Cosinus (Wpisz c)\n"
+#define MAX_INPUT 40
+
+//prosze o kompilacje z flagą -lm
+
+void sweep () {
+    while (getchar() != '\n');
+}
+
+char operator_input () {
+    regex_t check;
+    int spr;
+    char xyz[MAX_INPUT];
+    printf(OPERATORS_MSG);
+    fgets(xyz, MAX_INPUT, stdin);
+
+    spr = regcomp(&check, OPERAND_REGEX, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    char out = *xyz;
+    if (!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+}
+
+double num_input (char finput) {
+    regex_t check;
+    int spr;
+    char xyz[MAX_INPUT];
+    char *pnum;
+    printf("Proszę podaj liczbe nr.%c\n", finput);
+    fgets(xyz, MAX_INPUT, stdin);
+
+    spr = regcomp(&check, FLOAT_REGEX, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    double out = strtod(xyz, &pnum);
+    if(!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+
+}
+
+int main () {
+    do {
+        int operand_input;
+        char decision;
+        operand_input = operator_input();
+        char actual_operator = operand_input;
+        double a,b,c;
+        switch (actual_operator) {
+            case '+':
+                a = num_input('1');
+                b = num_input('2');
+                c = a + b;
+                printf("%lf", c);
+                break;
+            case '-':
+                a = num_input('1');
+                b = num_input('2');
+                c = a - b;
+                printf("%lf", c);
+                break;
+            case '*':
+                a = num_input('1');
+                b = num_input('2');
+                c = a * b;
+                printf("%lf", c);
+                break;
+            case '/':
+                a = num_input('1');
+                b = num_input('2');
+                if (b == 0) {
+                    printf("b nie może być zerem, spróbuj ponownie!\n");
+                    break;
+                }
+                c = a / b;
+                printf("%lf", c);
+                break;
+            case '^':
+                a = num_input('1');
+                b = num_input('2');
+                c = pow(a,b);
+                printf("%lf", c);
+                break;
+            case 'p':
+                a = num_input('1');
+                if (a<0) {
+                    printf("a musi być liczbą nieujemną!");
+                }
+                c = sqrt(a);
+                printf("%lf", c);
+                break;
+            case 'l':
+                a = num_input('1');
+                if (a<0) {
+                    printf("Liczba logarytmowana musi być większa od 0!\n");
+                }
+                c = log(a);
+                printf("%lf", c);
+                break;
+            case 's':
+                printf("Podaj liczbę w radianach!\n");
+                a = num_input('1');
+                printf("%lf", a);
+                c = sin(a);
+                printf("%lf", c);
+                break;
+            case 'c':
+                printf("Podaj liczbę w radianach!\n");
+                a = num_input('1');
+                c = cos(a);
+                printf("%lf", c);
+                break;
+            default: 
+                printf("Nieprawidłowa operacja!");
+
+        }
+        printf("Czy chcesz wykonać następną operację? (y/n)");
+        scanf("%c", &decision);
+        if (decision == 'y') {
+            sweep();
+            continue;
+            
+        }
+        else if (decision == 'n') {
+            break;
+        }
+        else {
+            printf("Nieprawidłowe działanie!");
+            exit(0);
+        }
+
+    }while(1);
+
+}
