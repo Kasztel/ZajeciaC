@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <regex.h>
+#define MAX 20
+#define INT_REGEX "^[0-9]*\n?$"
+
+int num_input () {
+    regex_t check;
+    int spr;
+    char xyz[MAX];
+    char *pnum;
+    printf("Proszę podaj liczbę: \n");
+    fgets(xyz, MAX, stdin);
+
+    spr = regcomp(&check, INT_REGEX, REG_EXTENDED);
+    spr = regexec(&check, xyz, 0, NULL, 0);
+
+    int out = strtod(xyz, &pnum);
+    if(!spr) {
+        return out;
+    }
+    else {
+        printf("Podano złe dane! Spróbuj ponownie!");
+        exit(0);
+    }
+
+}
+
+
+long int factorial(int n) {
+    if (n>1) {
+        return n*factorial(n-1);
+    }
+    else {
+        return 1;
+    }
+}
+
+int main () {
+    int n;
+    n = num_input();
+    printf("Silnia liczby %d to: %ld", n, factorial(n));
+}
