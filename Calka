@@ -1,0 +1,156 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <regex.h>
+#include <math.h>
+#define FLOAT_REGEX "^-?[0-9]+?\\.?([0-9]+)?\n?$"
+#define OPERAND_REGEX "^(\\+?\\-?\\/?\\=?\\^?l?s?c?p?a?w?)?\n?$"
+#define MAX 20000
+
+double tab[MAX];
+int top = 0;
+
+void push(double add) {
+    if (top == MAX) {
+        printf("Przepełnienie stosu!");
+        exit(0);
+    }
+    else {
+        tab[top + 1] = add;
+        top++;
+    }
+}
+double pop() {
+    if (top == 0) {
+        printf("Stos pusty, nie ma czego zdjąć!(Prawdopodobnie zostało źle wpisane działanie w ONP");
+        exit(0);
+    }
+    else {
+        top--;
+        return tab[top];
+        
+    }
+}
+int isfloat (char temp[MAX]) {
+    regex_t check;
+    int spr;
+
+    spr = regcomp(&check, FLOAT_REGEX, REG_EXTENDED);
+    spr = regexec(&check, temp, 0, NULL, 0);
+
+    if(!spr) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+
+}
+
+int isoperand (char temp[MAX]) {
+    regex_t check;
+    int spr;
+
+    spr = regcomp(&check, OPERAND_REGEX, REG_EXTENDED);
+    spr = regexec(&check, temp, 0, NULL, 0);
+
+    if(!spr) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+
+}
+
+double process (int argc, char *argv[], double z) {
+    char *rPtr;
+    double x,y;
+    for (int i=1; i<argc; i++) {
+        if (isoperand(argv[i])) {
+            char actual_operator = *argv[i];
+            switch (actual_operator) {
+                case '+':
+                    y = pop();
+                    x = pop();
+                    push(x+y);
+                    break;
+                case '-':
+                    y = pop();
+                    x = pop();
+                    push(x-y);
+                    break;
+                case 'a':
+                    y = pop();
+                    x = pop();
+                    double temp = x*y;
+                    push(temp);
+                    break;
+                case '/':
+                    y = pop();
+                    x = pop();
+                    if (x == 0) {
+                        printf("Nie wolno dzielić przez zero!");
+                        exit(0);
+                    }
+                    push(x/y);
+                    break;
+                case '^':
+                    y = pop();
+                    x = pop();
+                    push(pow(x,y));
+                    break;
+                case 'p':
+                    x = pop();
+                    push(sqrt(x));
+                    break;
+                case 'l':
+                    x = pop();
+                    push(log(x));
+                    break;
+                case 's':
+                    x = pop();
+                    push(sin(x));
+                    break;
+                case 'c':
+                    x = pop();
+                    push(cos(x));
+                    break;
+                default:
+                    printf("blad tragiczny");
+                    exit(1);
+            }
+        }
+        else if (!strcmp(argv[i], "x")) {
+            push(z);
+        }
+        else if (isfloat(argv[i])) {
+            double forpush = strtod(argv[i], &rPtr);
+            push(forpush);
+        }
+        else {
+            printf("Coś poszło nie tak!\n");
+        }
+        
+    }
+    printf("%lf", tab[1]);
+    return tab[1];
+}
+
+int main (int argc, char *argv[]) {
+
+    double p = 1;
+    double k = 3;
+    int n = 10000;
+    double suma = 0;
+    
+
+    double post = (k-p)/(double)n;
+    for (int i = 1; i<n; i++) {
+        suma += process(argc, argv, (p + (i*post)));
+    }
+    suma += process(argc, argv, p);
+    suma += process(argc, argv, k);
+    suma *= post;
+    printf("Wynik to: %lf\n", suma);
+}
