@@ -6,7 +6,10 @@
 #define FLOAT_REGEX "^-?[0-9]+?\\.?([0-9]+)?\n?$"
 #define OPERAND_REGEX "^(\\+?\\-?\\/?\\=?\\^?l?s?c?p?a?w?)?\n?$"
 #define MAX 20000
-
+// program oblicza całki metodą prostokątów
+// funkcje należy podać podczas wywołania programu w postaci ONP, każdy "wyraz" funkcji należy
+// odzdzielać spacjami
+// mnożenie zastąpiłem literą "a" jak asterisk, sam znak robił jakieś dziwne problemy
 double tab[MAX];
 int top = 0;
 
@@ -16,8 +19,7 @@ void push(double add) {
         exit(0);
     }
     else {
-        tab[top + 1] = add;
-        top++;
+        tab[top++] = add;
     }
 }
 double pop() {
@@ -26,8 +28,7 @@ double pop() {
         exit(0);
     }
     else {
-        top--;
-        return tab[top];
+        return tab[--top];
         
     }
 }
@@ -71,9 +72,9 @@ double process (int argc, char *argv[], double z) {
             char actual_operator = *argv[i];
             switch (actual_operator) {
                 case '+':
-                    y = pop();
-                    x = pop();
-                    push(x+y);
+                    y = pop();// top 2 -> top 1
+                    x = pop();// top 1 -> top 0
+                    push(x+y);//
                     break;
                 case '-':
                     y = pop();
@@ -89,10 +90,6 @@ double process (int argc, char *argv[], double z) {
                 case '/':
                     y = pop();
                     x = pop();
-                    if (x == 0) {
-                        printf("Nie wolno dzielić przez zero!");
-                        exit(0);
-                    }
                     push(x/y);
                     break;
                 case '^':
@@ -133,24 +130,22 @@ double process (int argc, char *argv[], double z) {
         }
         
     }
-    printf("%lf", tab[1]);
-    return tab[1];
+    top = 0;
+    return tab[top];
 }
 
 int main (int argc, char *argv[]) {
 
     double p = 1;
     double k = 3;
-    int n = 10000;
+    double n = 10000;
     double suma = 0;
     
 
-    double post = (k-p)/(double)n;
+    double h = (k-p)/n;
     for (int i = 1; i<n; i++) {
-        suma += process(argc, argv, (p + (i*post)));
+        suma += process(argc, argv, p + i*h);
     }
-    suma += process(argc, argv, p);
-    suma += process(argc, argv, k);
-    suma *= post;
+    suma *= h;
     printf("Wynik to: %lf\n", suma);
 }
